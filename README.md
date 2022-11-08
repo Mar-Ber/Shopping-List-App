@@ -18,3 +18,7 @@ Scrum Master will che chosen sprint wise
   * Konrad Golemo
   * Bartosz Gawęda
   * Filip Żmijewski
+
+## Other places
+
+* [Trello board](https://trello.com/b/D0T6aDvO/shopping-list-app)
