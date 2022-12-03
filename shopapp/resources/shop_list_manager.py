@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Dict
 from .shopping_list import ShoppingList
+from flask import abort
 
 print(f"Importing: {__name__}")
 
@@ -9,22 +10,26 @@ class ShopListManager():
 
     def __init__(self) -> None:
         super().__init__()
-        self.lists = Dict[str, ShoppingList]
+        self.lists = {}
         pass
 
     # @TODO
 
     def addList(self, payload):
         name = payload["list_name"]
-        print("Adding list", name)
+        errors = []
 
         if name in self.lists:
-            print("Cannot add list with same name")
+            errors.append(f"List {name} already exists")
         else:
-            self.lists[name] = ShoppingList(name)
+            print("Adding list", name)
+            slist = ShoppingList(name)
+            self.lists[name] = slist
             pass
-        print(self.lists)
 
+        print(str(self.lists))
+
+        return errors
         pass
 
     def addItem(self, list, item):

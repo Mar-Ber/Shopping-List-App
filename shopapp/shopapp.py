@@ -4,13 +4,14 @@ from flask import Flask
 from flask_restful import Api, reqparse
 
 from resources import *
-
+from resources.shop_list_manager import ShopListManager
 
 app = Flask(__name__)
 api = Api(app)
+
 api.add_resource(ShopListManagerAPI, "/shopapp/")
 
 
 if __name__ == '__main__':
-
     app.run(debug=True)
+    print("Exit")

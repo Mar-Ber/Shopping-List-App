@@ -9,14 +9,19 @@ from flask import Flask, request, abort
 
 import flask
 
+
 print(f"Importing ItemManagerAPI: {__name__}")
+
+
+manager_ = ShopListManager()
 
 
 class ShopListManagerAPI(Resource):
 
     def __init__(self) -> None:
         super().__init__()
-        self.manager_ = ShopListManager()
+
+        self.__name__ = "shopapp"
         pass
 
     def put(self):
@@ -39,11 +44,16 @@ class ShopListManagerAPI(Resource):
                 self.badRequest(errors)
                 pass
 
-            callback(payload)
+            callback_errors = callback(payload)
+            if callback_errors:
+                self.badRequest(callback_errors)
+                pass
+
             return str(t)
             pass
 
         except Exception as e:
+            print(e)
             self.badRequest(e)
             pass
 
@@ -53,12 +63,13 @@ class ShopListManagerAPI(Resource):
     def validatePutAction(self, action):
         schema = None
         callback = None
+
         if action == PutActionEnum.ADD_ITEM:
             schema = AddItemSchema()
 
         if action == PutActionEnum.CREATE_LIST:
             schema = CreateListSchema()
-            callback = self.manager_.addList
+            callback = manager_.addList
 
         return (schema, callback)
         pass
