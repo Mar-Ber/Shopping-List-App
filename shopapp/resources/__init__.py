@@ -1,4 +1,4 @@
 from __future__ import annotations
-print(f"Running {__name__}")
+from .shop_list_manager_api import ShopListManagerAPI
 
-from .item_manager_api import ItemManagerAPI
+print(f"Running {__name__}")
