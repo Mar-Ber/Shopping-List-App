@@ -12,6 +12,7 @@ class ShopListManager():
     def __init__(self) -> None:
         super().__init__()
         self.lists = {}
+        self.cards = {}
         pass
 
     # @TODO
@@ -55,6 +56,12 @@ class ShopListManager():
             ret_dict[CommonFields.ERRORS].append(errors)
 
         return ret_dict
+        pass
+
+    def addCard(self, payload: Dict):
+        ret_dict = {CommonFields.ERRORS: []}
+
+        name = payload[CommonFields.NAME]
         pass
 
     pass

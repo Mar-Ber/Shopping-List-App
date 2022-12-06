@@ -1,5 +1,6 @@
 from __future__ import annotations
 from enum import Enum, auto
+import types
 
 from marshmallow import Schema, fields
 
@@ -28,14 +29,24 @@ class CommonFields(str, Enum):
     pass
 
 
+class CardFields(str, Enum):
+    pass
+
+
 class PutActionSchema(Schema):
-    action = fields.Enum(PutActionEnum, required=True)
-    payload = fields.Dict(required=True)
+    pass
+
+
+PutActionSchema = type('PutActionSchema', (Schema,), {
+    CommonFields.ACTION.value: fields.Enum(PutActionEnum, required=True),
+    CommonFields.PAYLOAD.value: fields.Dict(required=True)
+})
 
 
 class GetActionSchema(Schema):
     action = fields.Enum(GetActionEnum, required=True)
     payload = fields.Dict(required=True)
+    pass
 
 
 class AddItemSchema(Schema):
@@ -44,7 +55,13 @@ class AddItemSchema(Schema):
 
     qty = fields.Int(required=False)
     price = fields.Float(required=False)
+    pass
 
 
 class CreateListSchema(Schema):
     list_name = fields.Str(required=True)
+    pass
+
+
+class CreateCardSchema(Schema):
+    pass
