@@ -4,7 +4,7 @@ import barcode
 from barcode.writer import ImageWriter
 import matplotlib.pyplot as plt
 import PIL.Image
-from .schemas import CardFields
+from .schemas import CardFields, CommonFields
 import base64
 import io
 
@@ -17,7 +17,23 @@ class Card():
         self.format_ = format
 
         EAN = barcode.get_barcode_class(self.format_)
-        self.validated_ean = EAN(str(self.number_))
+        validated_ean = EAN(str(self.number_))
+        pass
+
+    def getInfo(self):
+        ret_dict = {
+            CardFields.STORE: self.store_,
+            CardFields.NUMBER: self.number_,
+            CardFields.FORMAT: self.format_,
+            CommonFields.NAME: self.name_
+        }
+        return ret_dict
+        pass
+
+    def getBarcode(self):
+        ret_dict = {}
+        ret_dict[CardFields.BARCODE] = self.generateBarcode()
+        return ret_dict
         pass
 
     def generateBarcode(self):
