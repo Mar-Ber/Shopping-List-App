@@ -60,17 +60,30 @@ class ShopListManager():
         pass
 
     def addCard(self, payload: Dict):
-        ret_dict = {CommonFields.ERRORS: []}
+        ret_dict = {CommonFields.ERRORS: [], CardFields.BARCODE: []}
 
         number = payload[CardFields.NUMBER]
         store = payload[CardFields.STORE]
         format = CardFormatsEnum[payload[CardFields.FORMAT]]
-                  
+
         name = payload.get(CommonFields.NAME)
         if store not in self.cards.keys():
             self.cards[store] = []
 
-        self.cards[store].append(Card(number=number,store=store,name=name,format=format))
+        try:
+            card = Card(number=number, store=store, name=name, format=format)
+            self.cards[store].append(card)
+
+            card: Card
+            for card in self.cards[store]:
+                barcode_data = card.generateBarcode()
+                ret_dict[CardFields.BARCODE].append(barcode_data)
+            pass
+
+        except Exception as e:
+            ret_dict[CommonFields.ERRORS].append(str(e))
+            print(ret_dict)
+            pass
 
         return ret_dict
         pass

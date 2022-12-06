@@ -14,10 +14,14 @@ class PutActionEnum(Enum):
     ADD_CARD = auto()
     pass
 
+
 class GetActionEnum(Enum):
     LISTS = auto()
     ITEMS_IN = auto()
+    CARD_DATA = auto()
+    CARD_IMAGE = auto()
     pass
+
 
 class CommonFields(str, Enum):
     NAME = "name"
@@ -27,36 +31,49 @@ class CommonFields(str, Enum):
     PAYLOAD = "payload"
     pass
 
+
 class ItemFields(str, Enum):
     PRICE = "price"
     QTY = "qty"
     pass
 
+
 class CardFields(str, Enum):
     NUMBER = "number"
     STORE = "store"
     FORMAT = "format"
+    BARCODE = "barcode"
+    IMAGE_WIDTH = "image_width"
+    IMAGE_HEIGHT = "image_height"
+    IMAGE_PNG_B64 = "image_png_b64"
     pass
+
 
 class CardFormatsEnum(str, Enum):
     EAN8 = "ean8"
     EAN13 = "ean13"
     pass
 
+
 class PutActionSchema(Schema):
     pass
+
 
 class GetActionSchema(Schema):
     pass
 
+
 class AddItemSchema(Schema):
     pass
+
 
 class CreateListSchema(Schema):
     pass
 
+
 class AddCardSchema(Schema):
     pass
+
 
 PutActionSchema = type('PutActionSchema', (Schema,), {
     CommonFields.ACTION.value: fields.Enum(PutActionEnum, required=True),
@@ -71,7 +88,7 @@ GetActionSchema = type('GetActionSchema', (Schema,), {
 AddItemSchema = type('AddItemSchema', (Schema,), {
     CommonFields.NAME.value: fields.Str(required=True),
     CommonFields.LIST_NAME.value: fields.Str(required=True),
-    #NOT REQUIRED
+    # NOT REQUIRED
     ItemFields.QTY.value: fields.Int(required=False),
     ItemFields.PRICE.value: fields.Float(required=False)
 })
@@ -84,7 +101,6 @@ AddCardSchema = type("AddCardSchema", (Schema,), {
     CardFields.NUMBER.value: fields.Int(required=True),
     CardFields.STORE.value: fields.Str(required=True),
     CardFields.FORMAT.value: fields.Enum(CardFormatsEnum, required=True),
-    #NOT REQUIRED
+    # NOT REQUIRED
     CommonFields.NAME.value: fields.Str(required=False)
 })
-

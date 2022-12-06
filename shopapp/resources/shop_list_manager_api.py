@@ -45,7 +45,8 @@ class ShopListManagerAPI(Resource):
                 pass
 
             if errors:
-                self.badRequest(errors)  # LEAVING
+                ret_errors = {CommonFields.ERRORS: errors}
+                self.badRequest(ret_errors)  # LEAVING
                 pass
 
             ret_dict = callback(payload)
@@ -55,12 +56,13 @@ class ShopListManagerAPI(Resource):
                 self.badRequest(ret_errors)  # LEAVING
                 pass
 
-            return str(t)
+            return ret_dict
             pass
 
         except Exception as e:
-            print("Caught exception", e)
-            self.badRequest(e)
+            ret_errors = {CommonFields.ERRORS: str(e)}
+            print("Caught exception", ret_errors)
+            self.badRequest(ret_errors)  # LEAVING
             pass
 
         return "Unhandled case"
@@ -90,7 +92,7 @@ class ShopListManagerAPI(Resource):
         elif action == PutActionEnum.CREATE_LIST:
             schema = CreateListSchema()
             callback = manager_.addList
-        
+
         elif action == PutActionEnum.ADD_CARD:
             schema = AddCardSchema()
             callback = manager_.addCard
