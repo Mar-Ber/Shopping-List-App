@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .schemas import AddItemSchema, PutActionSchema, PutActionEnum, CreateListSchema, Schema, GetActionEnum, GetActionSchema
+from .schemas import AddItemSchema, PutActionSchema, PutActionEnum, CreateListSchema, Schema, GetActionEnum, GetActionSchema, AddCardSchema
 from .shop_list_manager import ShopListManager
 from .schemas import CommonFields
 from flask import abort, redirect, url_for
@@ -26,7 +26,10 @@ class ShopListManagerAPI(Resource):
         try:
             t = schema.loads(request.data)
             action = t[CommonFields.ACTION]
+            print("ACTION TYPE:", type(action))
             payload = t[CommonFields.PAYLOAD]
+            print(t)
+            print(payload)
             schema: Schema
             schema, callback = actionValidator(action)
 
@@ -87,6 +90,10 @@ class ShopListManagerAPI(Resource):
         elif action == PutActionEnum.CREATE_LIST:
             schema = CreateListSchema()
             callback = manager_.addList
+        
+        elif action == PutActionEnum.ADD_CARD:
+            schema = AddCardSchema()
+            callback = manager_.addCard
 
         return (schema, callback)
         pass
