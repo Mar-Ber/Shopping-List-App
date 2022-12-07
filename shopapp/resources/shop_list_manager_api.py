@@ -1,6 +1,13 @@
 from __future__ import annotations
 
-from .schemas import AddItemSchema, PutActionSchema, PutActionEnum, CreateListSchema, Schema, GetActionEnum, GetActionSchema, AddCardSchema
+from marshmallow import Schema
+
+from .schemas import PutActionEnum, GetActionEnum
+from .schemas import PutActionSchema, GetActionSchema
+from .schemas import AddItemSchema, CreateListSchema, AddCardSchema
+from .schemas import GetCardSchema
+
+
 from .shop_list_manager import ShopListManager
 from .schemas import CommonFields
 from flask import abort, redirect, url_for
@@ -50,7 +57,8 @@ class ShopListManagerAPI(Resource):
                 pass
 
             ret_dict = callback(payload)
-            ret_errors = ret_dict[CommonFields.ERRORS]
+            if ret_dict is not None:
+                ret_errors = ret_dict.get(CommonFields.ERRORS)
 
             if ret_errors:
                 self.badRequest(ret_errors)  # LEAVING
@@ -61,7 +69,7 @@ class ShopListManagerAPI(Resource):
 
         except Exception as e:
             ret_errors = {CommonFields.ERRORS: str(e)}
-            print("Caught exception", ret_errors)
+            print("Caught exception", str(e))
             self.badRequest(ret_errors)  # LEAVING
             pass
 
@@ -110,8 +118,12 @@ class ShopListManagerAPI(Resource):
         elif action == GetActionEnum.LISTS:
             schema = None
 
-        elif action == GetActionEnum.ITEMS_IN:
+        elif action == GetActionEnum.ITEMS:
             schema = None
+
+        elif action == GetActionEnum.CARD_DATA:
+            schema = GetCardSchema()
+            callback = manager_.getCardData
 
         return (schema, callback)
         pass

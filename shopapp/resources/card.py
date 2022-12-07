@@ -7,6 +7,7 @@ import PIL.Image
 from .schemas import CardFields, CommonFields
 import base64
 import io
+import json
 
 
 class Card():
@@ -19,6 +20,14 @@ class Card():
         EAN = barcode.get_barcode_class(self.format_)
         validated_ean = EAN(str(self.number_))
         pass
+
+    @property
+    def name(self):
+        return self.name_
+
+    @property
+    def number(self):
+        return self.number_
 
     def getInfo(self):
         ret_dict = {
@@ -57,12 +66,19 @@ class Card():
         barcode_image.save(bio, format="PNG")
         barcode_image_b64 = base64.b64encode(bio.getvalue()).decode("utf-8")
         barcode_data = {
-            self.name_:
-                {
-                    CardFields.IMAGE_WIDTH: width,
-                    CardFields.IMAGE_HEIGHT: height,
-                    CardFields.IMAGE_PNG_B64: barcode_image_b64
-                }
+            CardFields.INFO:
+            {
+                CardFields.NUMBER: self.number_,
+                CardFields.STORE: self.store_,
+                CommonFields.NAME: self.name_
+            },
+
+            CardFields.IMAGE:
+            {
+                CardFields.IMAGE_WIDTH: width,
+                CardFields.IMAGE_HEIGHT: height,
+                CardFields.IMAGE_PNG_B64: 0
+            }
         }
         return barcode_data
         pass

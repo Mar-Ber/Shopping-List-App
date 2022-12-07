@@ -17,7 +17,7 @@ class PutActionEnum(Enum):
 
 class GetActionEnum(Enum):
     LISTS = auto()
-    ITEMS_IN = auto()
+    ITEMS = auto()
     CARD_DATA = auto()
     CARD_IMAGE = auto()
     pass
@@ -29,6 +29,7 @@ class CommonFields(str, Enum):
     LIST_NAME = "list_name"
     ACTION = "action"
     PAYLOAD = "payload"
+    GET_RETURN = "get_return"
     pass
 
 
@@ -46,6 +47,8 @@ class CardFields(str, Enum):
     IMAGE_WIDTH = "image_width"
     IMAGE_HEIGHT = "image_height"
     IMAGE_PNG_B64 = "image_png_b64"
+    IMAGE = "image"
+    INFO = "info"
     pass
 
 
@@ -72,6 +75,10 @@ class CreateListSchema(Schema):
 
 
 class AddCardSchema(Schema):
+    pass
+
+
+class GetCardSchema(Schema):
     pass
 
 
@@ -102,5 +109,11 @@ AddCardSchema = type("AddCardSchema", (Schema,), {
     CardFields.STORE.value: fields.Str(required=True),
     CardFields.FORMAT.value: fields.Enum(CardFormatsEnum, required=True),
     # NOT REQUIRED
+    CommonFields.NAME.value: fields.Str(required=False)
+})
+
+GetCardSchema = type("AddCardSchema", (Schema,), {
+    CardFields.NUMBER.value: fields.Int(required=False),
+    CardFields.STORE.value: fields.Str(required=False),
     CommonFields.NAME.value: fields.Str(required=False)
 })

@@ -12,8 +12,8 @@ class ShopListManager():
 
     def __init__(self) -> None:
         super().__init__()
-        self.lists = {}
-        self.cards = {}
+        self.lists_ = {}
+        self.cards_ = {}
         pass
 
     # @TODO
@@ -22,14 +22,14 @@ class ShopListManager():
         name = payload[CommonFields.LIST_NAME]
         ret_dict = {CommonFields.ERRORS: []}
 
-        if name in self.lists:
+        if name in self.lists_:
             ret_dict[CommonFields.ERRORS].append(f"List {name} already exists")
         else:
             print("Adding list", name)
             slist = ShoppingList(name)
-            self.lists[name] = slist
+            self.lists_[name] = slist
             pass
-        print(str(self.lists))
+        print(str(self.lists_))
 
         return ret_dict
         pass
@@ -43,7 +43,7 @@ class ShopListManager():
         price = payload.get(ItemFields.PRICE)
 
         item = Item(name, qty, price)
-        target_list: ShoppingList = self.lists.get(target_list)
+        target_list: ShoppingList = self.lists_.get(target_list)
 
         errors = None
         if target_list is None:
@@ -65,17 +65,17 @@ class ShopListManager():
         number = payload[CardFields.NUMBER]
         store = payload[CardFields.STORE]
         format = CardFormatsEnum[payload[CardFields.FORMAT]]
-
         name = payload.get(CommonFields.NAME)
-        if store not in self.cards.keys():
-            self.cards[store] = []
+
+        if store not in self.cards_.keys():
+            self.cards_[store] = []
 
         try:
             card = Card(number=number, store=store, name=name, format=format)
-            self.cards[store].append(card)
+            self.cards_[store].append(card)
 
             card: Card
-            for card in self.cards[store]:
+            for card in self.cards_[store]:
                 barcode_data = card.generateBarcode()
                 ret_dict[CardFields.BARCODE].append(barcode_data)
             pass
@@ -88,4 +88,44 @@ class ShopListManager():
         return ret_dict
         pass
 
+    def getCardData(self, payload: Dict):
+        ret_dict = {CommonFields.GET_RETURN: []}
+
+        number = payload.get(CardFields.NUMBER)
+        store = payload.get(CardFields.STORE)
+        name = payload.get(CommonFields.NAME)
+
+        prelim_cards = []
+        ret_dict = {CommonFields.GET_RETURN: []}
+
+        if store is not None:
+            prelim_cards = self.cards_.get(store)
+        else:
+            for store in self.cards_:
+                for card in self.cards_[store]:
+                    prelim_cards.append(card)
+                pass
+            pass
+
+        if prelim_cards is None:
+            return ret_dict
+
+        card: Card
+        ret_cards = []
+        for card in prelim_cards:
+            info = card.getInfo()
+
+            accept_name = name is None or (info[CommonFields.NAME] == name)
+            accept_number = number is None or (
+                info[CardFields.NUMBER] == number)
+
+            accepted = accept_name and accept_number
+
+            if accepted:
+                ret_cards.append(card)
+            pass
+
+        for card in ret_cards:
+            ret_dict[CommonFields.GET_RETURN].append(card.getInfo())
+        return ret_dict
     pass
