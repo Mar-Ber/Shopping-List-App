@@ -34,6 +34,7 @@ class CommonFields(str, Enum):
 
 
 class ItemFields(str, Enum):
+    ITEMS = "items"
     PRICE = "price"
     QTY = "qty"
     pass
@@ -84,6 +85,9 @@ class GetCardSchema(Schema):
 class GetListsSchema(Schema):
     pass
 
+class GetItemsSchema(Schema):
+    pass
+
 
 PutActionSchema = type('PutActionSchema', (Schema,), {
     CommonFields.ACTION.value: fields.Enum(PutActionEnum, required=True),
@@ -119,4 +123,8 @@ GetCardSchema = type("AddCardSchema", (Schema,), {
     CardFields.NUMBER.value: fields.Int(required=False),
     CardFields.STORE.value: fields.Str(required=False),
     CommonFields.NAME.value: fields.Str(required=False)
+})
+
+GetItemsSchema = type("GetItemsSchema", (Schema,), {
+    CommonFields.LIST_NAME.value : fields.Str(required=False)
 })

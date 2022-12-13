@@ -1,4 +1,5 @@
 from __future__ import annotations
+from ast import List
 from typing import Dict
 from .shopping_list import ShoppingList
 from .item import Item
@@ -131,9 +132,41 @@ class ShopListManager():
     pass
 
     def getLists(self, payload):
+        ret_dict = {CommonFields.ERRORS: [], ItemFields.ITEMS: []}
+        if not self.lists_:
+            ret_dict[CommonFields.ERRORS].append("No lists to display")
+        else:
+            ret_dict[CommonFields.LIST_NAME] = list(self.lists_.keys())
+        return ret_dict
+        pass
+
+    def getItems(self, payload:Dict):
         ret_dict = {CommonFields.ERRORS: []}
-        ret_dict[CommonFields.LIST_NAME] = list(self.lists_.keys())
+
+        list_name = payload.get(CommonFields.LIST_NAME)
+
+        items = []
+        if list_name:
+
+            if list_name not in self.lists_:
+                ret_dict[CommonFields.ERRORS].append(f"No list named {list_name}")
+                return ret_dict
+
+            for item in self.lists_[list_name].items:
+                items.append(item.name_)
+
+            ret_dict[CommonFields.LIST_NAME] = list_name
+        else:
+            for list in self.lists_:
+                self.lists_:List(ShoppingList)
+                item: Item
+                for item in self.lists_[list].items:
+                    items.append(item.name_)
+
+        ret_dict[ItemFields.ITEMS] = items
+
+        if not items:
+            ret_dict[CommonFields.ERRORS].append("No items to display")
 
         return ret_dict
-
         pass
