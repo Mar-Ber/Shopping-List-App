@@ -77,9 +77,9 @@ class ShopListManager():
 
             card: Card
             for card in self.cards_[store]:
-                barcode_data = card.generateBarcode()
-                ret_dict[CardFields.BARCODE].append(barcode_data)
-            pass
+                #barcode_data = card.generateBarcode()
+                #ret_dict[CardFields.BARCODE].append(barcode_data)
+                pass
 
         except Exception as e:
             ret_dict[CommonFields.ERRORS].append(str(e))
@@ -90,14 +90,13 @@ class ShopListManager():
         pass
 
     def getCardData(self, payload: Dict):
-        ret_dict = {CommonFields.GET_RETURN: []}
+        ret_dict = {CardFields.CARDS: []}
 
         number = payload.get(CardFields.NUMBER)
         store = payload.get(CardFields.STORE)
         name = payload.get(CommonFields.NAME)
 
         prelim_cards = []
-        ret_dict = {CommonFields.GET_RETURN: []}
 
         if store is not None:
             prelim_cards = self.cards_.get(store)
@@ -127,9 +126,50 @@ class ShopListManager():
             pass
 
         for card in ret_cards:
-            ret_dict[CommonFields.GET_RETURN].append(card.getInfo())
+            ret_dict[CardFields.CARDS].append(card.getInfo())
         return ret_dict
     pass
+
+    def getCardBarcodes(self, payload):
+        ret_dict = {CardFields.CARDS: []}
+
+        number = payload.get(CardFields.NUMBER)
+        store = payload.get(CardFields.STORE)
+        name = payload.get(CommonFields.NAME)
+
+        prelim_cards = []
+
+        if store is not None:
+            prelim_cards = self.cards_.get(store)
+        else:
+            for store in self.cards_:
+                for card in self.cards_[store]:
+                    prelim_cards.append(card)
+                pass
+            pass
+
+        if prelim_cards is None:
+            return ret_dict
+
+        card: Card
+        ret_cards = []
+        for card in prelim_cards:
+            info = card.getInfo()
+
+            accept_name = name is None or (info[CommonFields.NAME] == name)
+            accept_number = number is None or (
+                info[CardFields.NUMBER] == number)
+
+            accepted = accept_name and accept_number
+
+            if accepted:
+                ret_cards.append(card)
+            pass
+
+        for card in ret_cards:
+            ret_dict[CardFields.CARDS].append(card.getBarcode())
+        return ret_dict
+        pass
 
     def getLists(self, payload):
         ret_dict = {CommonFields.ERRORS: [], ItemFields.ITEMS: []}

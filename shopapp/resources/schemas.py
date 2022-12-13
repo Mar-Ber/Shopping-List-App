@@ -19,7 +19,7 @@ class GetActionEnum(Enum):
     LISTS = auto()
     ITEMS = auto()
     CARD_DATA = auto()
-    CARD_IMAGE = auto()
+    CARD_BARCODE = auto()
     pass
 
 
@@ -41,6 +41,7 @@ class ItemFields(str, Enum):
 
 
 class CardFields(str, Enum):
+    CARDS = "cards"
     NUMBER = "number"
     STORE = "store"
     FORMAT = "format"
@@ -124,6 +125,7 @@ GetCardSchema = type("AddCardSchema", (Schema,), {
     CardFields.STORE.value: fields.Str(required=False),
     CommonFields.NAME.value: fields.Str(required=False)
 })
+
 
 GetItemsSchema = type("GetItemsSchema", (Schema,), {
     CommonFields.LIST_NAME.value : fields.Str(required=False)

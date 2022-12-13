@@ -127,6 +127,10 @@ class ShopListManagerAPI(Resource):
             schema = GetCardSchema()
             callback = manager_.getCardData
 
+        elif action == GetActionEnum.CARD_BARCODE:
+            schema = GetCardSchema()
+            callback = manager_.getCardBarcodes
+
         return (schema, callback)
         pass
 
