@@ -5,7 +5,7 @@ from marshmallow import Schema
 from .schemas import PutActionEnum, GetActionEnum
 from .schemas import PutActionSchema, GetActionSchema
 from .schemas import AddItemSchema, CreateListSchema, AddCardSchema
-from .schemas import GetCardSchema
+from .schemas import GetCardSchema, GetListsSchema
 
 
 from .shop_list_manager import ShopListManager
@@ -116,7 +116,8 @@ class ShopListManagerAPI(Resource):
             pass
 
         elif action == GetActionEnum.LISTS:
-            schema = None
+            schema = GetListsSchema()
+            callback = manager_.getLists
 
         elif action == GetActionEnum.ITEMS:
             schema = None

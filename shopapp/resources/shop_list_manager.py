@@ -129,3 +129,11 @@ class ShopListManager():
             ret_dict[CommonFields.GET_RETURN].append(card.getInfo())
         return ret_dict
     pass
+
+    def getLists(self, payload):
+        ret_dict = {CommonFields.ERRORS: []}
+        ret_dict[CommonFields.LIST_NAME] = list(self.lists_.keys())
+
+        return ret_dict
+
+        pass

@@ -81,6 +81,9 @@ class AddCardSchema(Schema):
 class GetCardSchema(Schema):
     pass
 
+class GetListsSchema(Schema):
+    pass
+
 
 PutActionSchema = type('PutActionSchema', (Schema,), {
     CommonFields.ACTION.value: fields.Enum(PutActionEnum, required=True),
