@@ -77,7 +77,7 @@ class Card():
             {
                 CardFields.IMAGE_WIDTH: width,
                 CardFields.IMAGE_HEIGHT: height,
-                CardFields.IMAGE_PNG_B64: 0
+                CardFields.IMAGE_PNG_B64: barcode_image_b64
             }
         }
         return barcode_data

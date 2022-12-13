@@ -61,7 +61,7 @@ class ShopListManager():
         pass
 
     def addCard(self, payload: Dict):
-        ret_dict = {CommonFields.ERRORS: [], CardFields.BARCODE: []}
+        ret_dict = {CommonFields.ERRORS: []}
 
         number = payload[CardFields.NUMBER]
         store = payload[CardFields.STORE]
@@ -74,12 +74,6 @@ class ShopListManager():
         try:
             card = Card(number=number, store=store, name=name, format=format)
             self.cards_[store].append(card)
-
-            card: Card
-            for card in self.cards_[store]:
-                #barcode_data = card.generateBarcode()
-                #ret_dict[CardFields.BARCODE].append(barcode_data)
-                pass
 
         except Exception as e:
             ret_dict[CommonFields.ERRORS].append(str(e))
